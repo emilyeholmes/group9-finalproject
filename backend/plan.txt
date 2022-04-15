@@ -1,0 +1,2 @@
+How to do messaging?
+- we plan on implementing this file structure more fully as we work, watching videos as tutorials
