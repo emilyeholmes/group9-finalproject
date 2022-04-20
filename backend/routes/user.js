@@ -21,6 +21,8 @@ router.post(
         check("password", "Please enter a valid password").isLength({
             min: 6,
         }),
+        check("bio", "please enter bio").not().isEmpty(),
+        check("emojigoal", "please add goal").not().isEmpty(),
     ],
     async (req, res) => {
         const errors = validationResult(req);
@@ -30,7 +32,7 @@ router.post(
             });
         }
 
-        const { username, email, password } = req.body;
+        const { username, email, password, bio, emojigoal } = req.body;
         try {
             let user = await User.findOne({
                 email,
@@ -45,6 +47,8 @@ router.post(
                 username,
                 email,
                 password,
+                bio,
+                emojigoal
             });
 
             const salt = await bcrypt.genSalt(10);
@@ -145,7 +149,7 @@ router.post(
  * @param - /user/me
  */
 
-router.get("/me", auth, async (req, res) => {
+router.get("/profile", auth, async (req, res) => {
     try {
         // request.user is getting fetched from Middleware after token authentication
         const user = await User.findById(req.user.id);
@@ -154,5 +158,22 @@ router.get("/me", auth, async (req, res) => {
         res.send({ message: "Error in Fetching user" });
     }
 });
+
+router.post("/potentialmatches", auth, async (req, res) => {
+    try {
+        // request.user is getting fetched from Middleware after token authentication
+        const user = await User.findById(req.user.id);
+        user.potentialmatches.push(req.body.otheruser);
+        res.send(user.potentialmatches);
+    } catch (e) {
+        res.send({ message: "Error in Fetching matches" });
+    }
+});
+
+
+//figure out how profiles are chosen to display
+//add potential match thing
+//change bio
+//get random profile ?????
 
 module.exports = router;

@@ -1,3 +1,4 @@
+const { json } = require("express");
 const mongoose = require("mongoose");
 
 const UserSchema = mongoose.Schema({
@@ -24,6 +25,14 @@ const UserSchema = mongoose.Schema({
     emojigoal: {
         type: String,
         required: true,
+    },
+    potentialmatches: {
+        type: JSON,
+        required: false,
+    },
+    existingmatches: {
+        type: JSON,
+        required: false,
     }
 });
 
