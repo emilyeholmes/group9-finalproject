@@ -1,3 +1,4 @@
+const { json } = require("express");
 const mongoose = require("mongoose");
 
 const UserSchema = mongoose.Schema({
@@ -24,8 +25,17 @@ const UserSchema = mongoose.Schema({
     emojigoal: {
         type: String,
         required: true,
+    },
+    potentialmatches: {
+        type: Array,
+        required: false,
+    },
+    existingmatches: {
+        type: Array,
+        required: false,
     }
-});
+},
+    { 'collection': 'users' });
 
 // export model user with UserSchema
 module.exports = mongoose.model("user", UserSchema);

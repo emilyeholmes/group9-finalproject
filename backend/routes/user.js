@@ -7,6 +7,13 @@ const router = express.Router();
 const User = require("../models/User");
 const auth = require('../middleware/auth');
 
+const mongoose = require("mongoose");
+
+const db = mongoose.connection;
+const url = "mongodb://127.0.0.1:27017/group9final";
+
+mongoose.connect(url, { useUnifiedTopology: true, useNewUrlParser: true })
+
 /**
  * @method - POST
  * @param - /signup
@@ -21,6 +28,8 @@ router.post(
         check("password", "Please enter a valid password").isLength({
             min: 6,
         }),
+        check("bio", "please enter bio").not().isEmpty(),
+        check("emojigoal", "please add goal").not().isEmpty(),
     ],
     async (req, res) => {
         const errors = validationResult(req);
@@ -30,7 +39,7 @@ router.post(
             });
         }
 
-        const { username, email, password } = req.body;
+        const { username, email, password, bio, emojigoal } = req.body;
         try {
             let user = await User.findOne({
                 email,
@@ -45,6 +54,8 @@ router.post(
                 username,
                 email,
                 password,
+                bio,
+                emojigoal
             });
 
             const salt = await bcrypt.genSalt(10);
@@ -71,6 +82,7 @@ router.post(
                     });
                 }
             );
+
         } catch (err) {
             console.log(err.message);
             res.status(500).send("Error in Saving");
@@ -141,11 +153,13 @@ router.post(
 
 /**
  * @method - GET
- * @description - Get LoggedIn User
- * @param - /user/me
+ * @description - Get User info
+ * @param - /user/profile
  */
 
-router.get("/me", auth, async (req, res) => {
+
+//I think we should take away the auth part since it's a social media and we want to be able to view each other's accounts.
+router.get("/profile", auth, async (req, res) => {
     try {
         // request.user is getting fetched from Middleware after token authentication
         const user = await User.findById(req.user.id);
@@ -154,5 +168,37 @@ router.get("/me", auth, async (req, res) => {
         res.send({ message: "Error in Fetching user" });
     }
 });
+
+router.post("/potentialmatches", auth, async (req, res) => {
+    try {
+        // request.user is getting fetched from Middleware after token authentication
+        const user = await User.findById(req.user.id);
+        user.potentialmatches = user.potentialmatches.push(req.body.otherusername);
+        res.send(user.potentialmatches);
+    } catch (e) {
+        res.send({ message: "Error in Fetching matches" });
+    }
+});
+//this causes an "Error in fetching matches"... not entirely sure why... 
+
+
+router.post("/changebio", auth, async (req, res) => {
+    try {
+        // request.user is getting fetched from Middleware after token authentication
+        const user = await User.findById(req.user.id);
+        db.collection('users').updateOne(
+            { username: user.username },
+            { $set: { bio: req.body.newbio },
+              $currentDate: {lastUpdate: true} })
+        // user.bio = req.body.newbio;
+        res.send("success");
+    } catch (e) {
+        res.send({ message: "Error in changing bio" });
+    }
+});
+
+//figure out how profiles are chosen to display
+//change bio
+//get random profile ?????
 
 module.exports = router;
