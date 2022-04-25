@@ -1,0 +1,8 @@
+.conversation-list {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  justify-content: left;
+  align-items: left;
+  justify-items: left;
+}
