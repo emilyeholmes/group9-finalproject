@@ -27,14 +27,15 @@ const UserSchema = mongoose.Schema({
         required: true,
     },
     potentialmatches: {
-        type: JSON,
+        type: Array,
         required: false,
     },
     existingmatches: {
-        type: JSON,
+        type: Array,
         required: false,
     }
-});
+},
+    { 'collection': 'users' });
 
 // export model user with UserSchema
 module.exports = mongoose.model("user", UserSchema);

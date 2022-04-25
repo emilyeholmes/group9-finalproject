@@ -1,12 +1,19 @@
 const express = require("express");
 const bodyParser = require("body-parser");
 const user = require("./routes/user");
+const allusers = require("./routes/allusers");
 const InitiateMongoServer = require("./config/db");
+
+require('dotenv').config();
 
 // Initiate Mongo Server
 InitiateMongoServer();
 
 const app = express();
+
+// app.use(cors());
+// app.use(express.json());
+// app.use(express.urlencoded());
 
 // PORT
 const PORT = process.env.PORT || 4000;
@@ -19,6 +26,8 @@ app.get("/", (req, res) => {
 });
 
 app.use("/user", user);
+
+app.use("/allusers", allusers);
 
 app.listen(PORT, (req, res) => {
     console.log(`Server Started at PORT ${PORT}`);
