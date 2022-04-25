@@ -186,10 +186,10 @@ router.post("/changebio", auth, async (req, res) => {
     try {
         // request.user is getting fetched from Middleware after token authentication
         const user = await User.findById(req.user.id);
-
         db.collection('users').updateOne(
-            { username: req.username },
-            { $set: { bio: req.newbio } })
+            { username: user.username },
+            { $set: { bio: req.body.newbio },
+              $currentDate: {lastUpdate: true} })
         // user.bio = req.body.newbio;
         res.send("success");
     } catch (e) {
