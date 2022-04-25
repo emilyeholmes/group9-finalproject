@@ -5,6 +5,17 @@ import Form from './components/profile/Form';
 import NavBar from './components/navbar/NavBar';
 import About from './components/about/About';
 import { ChakraProvider, CSSReset, Box } from '@chakra-ui/react'
+import Main from './components/Main'
+
+function App() {
+  return (
+    <div>
+      <CSSReset />
+      <NavBar />
+      <Main />
+    </div>
+  )
+}
 
 /*
 function App() {
@@ -19,6 +30,7 @@ function App() {
 }
 */
 
+/*
 function App() {
   return (
     <div>
@@ -30,7 +42,7 @@ function App() {
     </div>
   )
 }
-
+*/
 
 
 /*

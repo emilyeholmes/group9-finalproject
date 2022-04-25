@@ -50,9 +50,6 @@ export default function HookForm() {
   return (
     <div>
       <form onSubmit={handleSubmit(onSubmit)} margin='0'>
-        <div>
-          <NavBar />
-        </div>
         <Flex 
         direction="row"
         padding='1rem'
@@ -95,52 +92,19 @@ export default function HookForm() {
               gap="1rem"
               justifyContent="space-around"
               >
-                <Box boxSize='100px'
+                <Box boxSize='200px'
                 borderWidth="1px">
                   <Image src='...' alt='Picture 1' fallbackSrc='https://images.squarespace-cdn.com/content/v1/56e19ec5e3214084d69d4b7d/1473524254173-BGV5W2Z5FM46F67SYZHJ/PlusIcon_Small_Gray.png'/>
                 </Box>
-                <Box boxSize='100px'
+                <Box boxSize='200px'
                 borderWidth="1px">
                   <Image src='...' alt='Picture 2' fallbackSrc='https://images.squarespace-cdn.com/content/v1/56e19ec5e3214084d69d4b7d/1473524254173-BGV5W2Z5FM46F67SYZHJ/PlusIcon_Small_Gray.png'/>
                 </Box>
-                <Box boxSize='100px'
-                borderWidth="1px">
-                  <Image src='...' alt='Picture 3' fallbackSrc='https://images.squarespace-cdn.com/content/v1/56e19ec5e3214084d69d4b7d/1473524254173-BGV5W2Z5FM46F67SYZHJ/PlusIcon_Small_Gray.png'/>
-                </Box>
               </Flex>
               <Flex 
               direction="row"
               paddingLeft='1rem'
               paddingRight='1rem'
-              gap="1rem"
-              justifyContent="space-around"
-              >
-                <Button variant='outline' color='#665C97' borderColor='#665C97' >Change</Button>
-                <Button variant='outline' color='#665C97' borderColor='#665C97' >Change</Button>
-                <Button variant='outline' color='#665C97' borderColor='#665C97' >Change</Button>
-              </Flex>
-              <Flex 
-              direction="row"
-              paddingLeft='1rem'
-              paddingRight='1rem'
-              paddingTop='1rem'
-              gap="1rem"
-              justifyContent="space-around"
-              >
-                <Box boxSize='100px'
-                borderWidth="1px">
-                  <Image src='...' alt='Picture 4' fallbackSrc='https://images.squarespace-cdn.com/content/v1/56e19ec5e3214084d69d4b7d/1473524254173-BGV5W2Z5FM46F67SYZHJ/PlusIcon_Small_Gray.png'/>
-                </Box>
-                <Box boxSize='100px'
-                borderWidth="1px">
-                  <Image src='...' alt='Picture 5' fallbackSrc='https://images.squarespace-cdn.com/content/v1/56e19ec5e3214084d69d4b7d/1473524254173-BGV5W2Z5FM46F67SYZHJ/PlusIcon_Small_Gray.png'/>
-                </Box>
-              </Flex>
-              <Flex 
-              direction="row"
-              paddingLeft='1rem'
-              paddingRight='1rem'
-              paddingBottom='1rem'
               gap="1rem"
               justifyContent="space-around"
               >
@@ -251,7 +215,7 @@ export default function HookForm() {
 
             <Stack spacing={10} mb={5}>
               <FormControl>
-                  <FormLabel htmlFor='intro'>Introduce yourself!</FormLabel>
+                  <FormLabel htmlFor='bio'>Bio</FormLabel>
                   <Input
                     bg='white'
                     focusBorderColor='#ADDDDF'
@@ -261,30 +225,44 @@ export default function HookForm() {
                   <FormHelperText>E.g. Junior Computer Science major @ UC Berkeley</FormHelperText>
                 </FormControl>
             </Stack>
-
+            
             <Stack spacing={10} mb={5}>
               <FormControl>
-                <FormLabel htmlFor='goal'>Looking for...</FormLabel>
-                <Input
-                  bg='white'
-                  focusBorderColor='#ADDDDF'
-                  id='text'
-                  placeholder='current'
-                />
-                <FormHelperText>E.g. an SWE summer internship</FormHelperText>
-              </FormControl>
+                  <FormLabel htmlFor='goal'>Looking for... 🐜</FormLabel>
+                  <Input
+                    bg='white'
+                    focusBorderColor='#ADDDDF'
+                    id='text'
+                    placeholder='current'
+                  />
+                  <FormHelperText>E.g. an SWE summer internship</FormHelperText>
+                </FormControl>
             </Stack>
 
-            <Spacer />
-
             <Stack spacing={10} mb={5}>
               <FormControl>
-                <FormLabel htmlFor='bio'>More about you</FormLabel>
-                <Textarea 
-                bg='white'
-                focusBorderColor='#ADDDDF'
-                placeholder='current' />
-                <FormHelperText>Your interests, hobbies, majors...</FormHelperText>
+                <FormLabel htmlFor='about'>About me 🐑</FormLabel>
+                <Flex gap='1rem' flexDirection='column'>
+                  <Input
+                    bg='white'
+                    focusBorderColor='#ADDDDF'
+                    id='text'
+                    placeholder='current'
+                  />
+                  <Input
+                    bg='white'
+                    focusBorderColor='#ADDDDF'
+                    id='text'
+                    placeholder='current'
+                  />
+                  <Input
+                    bg='white'
+                    focusBorderColor='#ADDDDF'
+                    id='text'
+                    placeholder='current'
+                  />
+                </Flex>
+                <FormHelperText>Hobbies, interests, anything!</FormHelperText>
               </FormControl>
             </Stack>
 
