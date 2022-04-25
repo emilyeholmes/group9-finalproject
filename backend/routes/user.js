@@ -173,8 +173,11 @@ router.post("/potentialmatches", auth, async (req, res) => {
     try {
         // request.user is getting fetched from Middleware after token authentication
         const user = await User.findById(req.user.id);
-        user.potentialmatches = user.potentialmatches.push(req.body.otherusername);
-        res.send(user.potentialmatches);
+        db.collection('users').updateOne(
+            { username: user.username },
+            { $push: { potentialmatches: req.body.otherusername },
+              $currentDate: {lastUpdate: true} })
+        res.send("Success");
     } catch (e) {
         res.send({ message: "Error in Fetching matches" });
     }
@@ -189,6 +192,21 @@ router.post("/changebio", auth, async (req, res) => {
         db.collection('users').updateOne(
             { username: user.username },
             { $set: { bio: req.body.newbio },
+              $currentDate: {lastUpdate: true} })
+        // user.bio = req.body.newbio;
+        res.send("success");
+    } catch (e) {
+        res.send({ message: "Error in changing bio" });
+    }
+});
+
+router.post("/profilepic", auth, async (req, res) => {
+    try {
+        // request.user is getting fetched from Middleware after token authentication
+        const user = await User.findById(req.user.id);
+        db.collection('users').updateOne(
+            { username: user.username },
+            { $set: { profileurl: req.body.url },
               $currentDate: {lastUpdate: true} })
         // user.bio = req.body.newbio;
         res.send("success");
