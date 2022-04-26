@@ -4,11 +4,11 @@ const User = require("../models/User");
 
 const MessageSchema = mongoose.Schema({
     sender: {
-        type: User,
+        type: String,
         required: true,
     },
     receiver: {
-        type: User,
+        type: String,
         required: true,
     },
     body: {
