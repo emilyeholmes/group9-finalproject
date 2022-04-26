@@ -33,6 +33,10 @@ const UserSchema = mongoose.Schema({
     existingmatches: {
         type: Array,
         required: false,
+    },
+    conversations: {
+        type: JSON,
+        required: false
     }
 },
     { 'collection': 'users' });

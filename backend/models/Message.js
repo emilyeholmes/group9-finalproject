@@ -22,6 +22,14 @@ const MessageSchema = mongoose.Schema({
     timestamp: {
         type: String,
         required: true,
+    },
+    previous: {
+        type: String,
+        required: true
+    },
+    unread: {
+        type: Boolean,
+        default: true,
     }
 });
 

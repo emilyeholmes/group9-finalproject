@@ -5,6 +5,7 @@ const jwt = require("jsonwebtoken");
 const router = express.Router();
 
 const User = require("../models/User");
+const Message = require("../models/Message");
 const auth = require('../middleware/auth');
 
 const mongoose = require("mongoose");
@@ -184,6 +185,19 @@ router.post("/potentialmatches", auth, async (req, res) => {
 });
 //this causes an "Error in fetching matches"... not entirely sure why... 
 
+router.post("/existingmatches", auth, async (req, res) => {
+    try {
+        // request.user is getting fetched from Middleware after token authentication
+        const user = await User.findById(req.user.id);
+        db.collection('users').updateOne(
+            { username: user.username },
+            { $push: { matches: req.body.otherusername },
+              $currentDate: {lastUpdate: true} })
+        res.send("Success");
+    } catch (e) {
+        res.send({ message: "Error in Fetching matches" });
+    }
+});
 
 router.post("/changebio", auth, async (req, res) => {
     try {
@@ -213,6 +227,21 @@ router.post("/profilepic", auth, async (req, res) => {
     } catch (e) {
         res.send({ message: "Error in changing bio" });
     }
+});
+
+router.post("/sendmessage", auth, async (req, res) => {
+    try {
+        const user = await User.findById(req.user.id);
+        message = new Message({
+            sender: user.username,
+            receiver: 
+
+        });
+    }
+});
+
+router.get("/showmessage", auth, async (req, res) => {
+
 });
 
 //figure out how profiles are chosen to display
