@@ -237,8 +237,7 @@ router.post("/profilepic", auth, async (req, res) => {
     }
 });
 
-
-router.get("/showmessage", auth, async (req, res) => {
+router.get("/sendmessage", auth, async (req, res) => {
     try {
         const user = await User.findById(req.user.id);
         const otheruser = await User.findById(req.body.otherusername);
