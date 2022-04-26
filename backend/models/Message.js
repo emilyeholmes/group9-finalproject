@@ -21,11 +21,12 @@ const MessageSchema = mongoose.Schema({
     },
     previous: {
         type: String,
-        required: true
+        default: null,
+        required: false
     },
     unread: {
         type: Boolean,
-        default: true,
+        required: true
     }
 },
     { 'collection': 'messages' });

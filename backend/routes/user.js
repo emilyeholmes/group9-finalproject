@@ -4,12 +4,14 @@ const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const router = express.Router();
 
+const ObjectID = require('mongodb').ObjectID;
 const User = require("../models/User");
 const Message = require("../models/Message");
 const auth = require('../middleware/auth');
 
 const mongoose = require("mongoose");
 const { ResultWithContext } = require("express-validator/src/chain");
+const { ObjectId } = require("mongodb");
 
 const db = mongoose.connection;
 const url = "mongodb://127.0.0.1:27017/group9final";
@@ -238,7 +240,7 @@ router.post("/profilepic", auth, async (req, res) => {
     }
 });
 
-router.get("/sendmessage", auth, async (req, res) => {
+router.post("/sendmessage", auth, async (req, res) => {
     try {
         const user = await User.findById(req.user.id);
         const otheruser = await User.findOne({ username: req.body.otherusername });
@@ -246,19 +248,29 @@ router.get("/sendmessage", auth, async (req, res) => {
         let hours = date_ob.getHours();
         let minutes = date_ob.getMinutes();
         let ourtimestamp = (hours + ":" + minutes);
-        let lastmess = user.conversations[user.conversations.length - 1]
-        while (lastmess != null && lastmess.sender != user && lastmess.sender != otheruser
-            && lastmess.receiver != user && lastmess.receiver != otheruser) {
-            lastmess = lastmess.previous
+        let lastmess = user.conversations != null ?
+                        user.conversations[user.conversations.length - 1] :
+                        null;
+        // Iterate backwards throu
+        let counter = user.conversations.length - 2;
+        while (lastmess != null && lastmess.sender != user.username 
+            && lastmess.sender != otheruser.username
+            && lastmess.receiver != user.username 
+            && lastmess.receiver != otheruser.username) {
+            lastmess = user.conversations[counter];
+            counter -= 1;
         }
         message = new Message({
-            sender: user,
-            receiver: otheruser,
+            sender: user.username,
+            receiver: otheruser.username,
             body: req.body.text,
             timestamp: ourtimestamp,
-            previous: lastmess.id,
+            previous: lastmess != null ? lastmess.id : null,
             unread: true
         });
+        
+        await message.save();
+
         db.collection('users').updateOne(
             { username: otheruser.username },
             {
@@ -273,17 +285,26 @@ router.get("/sendmessage", auth, async (req, res) => {
             });
         res.json(message);
     } catch (e) {
-        res.send({ message: "Error in sending message." });
+        console.log(e);
+        res.send({ message: "Error in sending message." + e});
     }
 });
 
 router.get("/showmessage", auth, async (req, res) => {
     try {
         let message = await Message.findById(req.body.id);
-        if (req.user.id === message.receiver) {
+        let user = await User.findById(req.user.id);
+        if (message == null) {
+            return res.status(400).json({
+                message: "Message Not Exist"});
+        }
+        
+        if (user.username === message.receiver) {
+            console.log(user.username, message.receiver);
             db.collection('messages').updateOne(
-                { id: message.id },
-                { $set: { unread: false } });
+                { _id: ObjectId(req.body.id) },
+                { $set: { unread: true },
+                  $currentDate: { lastUpdate: true } });
             message = await Message.findById(req.body.id);
         }
         res.json(message);
