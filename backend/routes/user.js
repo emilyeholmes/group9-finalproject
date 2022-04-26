@@ -9,6 +9,7 @@ const Message = require("../models/Message");
 const auth = require('../middleware/auth');
 
 const mongoose = require("mongoose");
+const { ResultWithContext } = require("express-validator/src/chain");
 
 const db = mongoose.connection;
 const url = "mongodb://127.0.0.1:27017/group9final";
@@ -238,42 +239,41 @@ router.post("/profilepic", auth, async (req, res) => {
 });
 
 router.get("/sendmessage", auth, async (req, res) => {
-    try {
-        const user = await User.findById(req.user.id);
-        const otheruser = await User.findById(req.body.otherusername);
-        let date_ob = new Date();
-        let hours = date_ob.getHours();
-        let minutes = date_ob.getMinutes();
-        let ourtimestamp = (hours + ":" + minutes);
-        let lastmess = user.conversations[user.conversations.length - 1]
-        while (lastmess != null && lastmess.sender != user && lastmess.sender != otheruser
-            && lastmess.receiver != user && lastmess.receiver != otheruser) {
-            lastmess = lastmess.previous
-        }
-        message = new Message({
-            sender: user,
-            receiver: otheruser,
-            body: req.body.text,
-            timestamp: ourtimestamp,
-            previous: lastmess.id,
-            unread: true
-        });
-        db.collection('users').updateOne(
-            { username: otheruser.username },
-            {
-                $push: { conversations: message },
-                $currentDate: { lastUpdate: true }
-            });
-        db.collection('users').updateOne(
-            { username: user.username },
-            {
-                $push: { conversations: message },
-                $currentDate: { lastUpdate: true }
-            });
-        res.json(message);
-    } catch (e) {
-        res.send({ message: "Error in sending message." });
+    const user = await User.findById(req.user.id);
+    const otheruser = await User.findOne({ username: req.body.otherusername });
+    let date_ob = new Date();
+    let hours = date_ob.getHours();
+    let minutes = date_ob.getMinutes();
+    let ourtimestamp = (hours + ":" + minutes);
+    let lastmess = user.conversations[user.conversations.length - 1]
+    while (lastmess != null && lastmess.sender != user && lastmess.sender != otheruser
+        && lastmess.receiver != user && lastmess.receiver != otheruser) {
+        lastmess = lastmess.previous
     }
+    message = new Message({
+        sender: user,
+        receiver: otheruser,
+        body: req.body.text,
+        timestamp: ourtimestamp,
+        previous: lastmess.id,
+        unread: true
+    });
+    db.collection('users').updateOne(
+        { username: otheruser.username },
+        {
+            $push: { conversations: message },
+            $currentDate: { lastUpdate: true }
+        });
+    db.collection('users').updateOne(
+        { username: user.username },
+        {
+            $push: { conversations: message },
+            $currentDate: { lastUpdate: true }
+        });
+    res.json(message);
+} catch (e) {
+    res.send({ message: "Error in sending message." });
+}
 });
 
 router.get("/showmessage", auth, async (req, res) => {
