@@ -35,7 +35,7 @@ const UserSchema = mongoose.Schema({
         required: false,
     },
     conversations: {
-        type: JSON,
+        type: Array,
         required: false
     }
 },

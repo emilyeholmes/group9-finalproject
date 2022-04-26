@@ -176,8 +176,10 @@ router.post("/potentialmatches", auth, async (req, res) => {
         const user = await User.findById(req.user.id);
         db.collection('users').updateOne(
             { username: user.username },
-            { $push: { potentialmatches: req.body.otherusername },
-              $currentDate: {lastUpdate: true} })
+            {
+                $push: { potentialmatches: req.body.otherusername },
+                $currentDate: { lastUpdate: true }
+            })
         res.send("Success");
     } catch (e) {
         res.send({ message: "Error in Fetching matches" });
@@ -191,8 +193,10 @@ router.post("/existingmatches", auth, async (req, res) => {
         const user = await User.findById(req.user.id);
         db.collection('users').updateOne(
             { username: user.username },
-            { $push: { matches: req.body.otherusername },
-              $currentDate: {lastUpdate: true} })
+            {
+                $push: { matches: req.body.otherusername },
+                $currentDate: { lastUpdate: true }
+            })
         res.send("Success");
     } catch (e) {
         res.send({ message: "Error in Fetching matches" });
@@ -205,8 +209,10 @@ router.post("/changebio", auth, async (req, res) => {
         const user = await User.findById(req.user.id);
         db.collection('users').updateOne(
             { username: user.username },
-            { $set: { bio: req.body.newbio },
-              $currentDate: {lastUpdate: true} })
+            {
+                $set: { bio: req.body.newbio },
+                $currentDate: { lastUpdate: true }
+            })
         // user.bio = req.body.newbio;
         res.send("success");
     } catch (e) {
@@ -220,12 +226,54 @@ router.post("/profilepic", auth, async (req, res) => {
         const user = await User.findById(req.user.id);
         db.collection('users').updateOne(
             { username: user.username },
-            { $set: { profileurl: req.body.url },
-              $currentDate: {lastUpdate: true} })
+            {
+                $set: { profileurl: req.body.url },
+                $currentDate: { lastUpdate: true }
+            })
         // user.bio = req.body.newbio;
         res.send("success");
     } catch (e) {
         res.send({ message: "Error in changing bio" });
+    }
+});
+
+
+router.get("/showmessage", auth, async (req, res) => {
+    try {
+        const user = await User.findById(req.user.id);
+        const otheruser = await User.findById(req.body.otherusername);
+        let date_ob = new Date();
+        let hours = date_ob.getHours();
+        let minutes = date_ob.getMinutes();
+        let ourtimestamp = (hours + ":" + minutes);
+        let lastmess = user.conversations[user.conversations.length - 1]
+        while (lastmess != null && lastmess.sender != user && lastmess.sender != otheruser
+            && lastmess.receiver != user && lastmess.receiver != otheruser) {
+            lastmess = lastmess.previous
+        }
+        message = new Message({
+            sender: user,
+            receiver: otheruser,
+            body: req.body.text,
+            timestamp: ourtimestamp,
+            previous: lastmess.id,
+            unread: true
+        });
+        db.collection('users').updateOne(
+            { username: otheruser.username },
+            {
+                $push: { conversations: message },
+                $currentDate: { lastUpdate: true }
+            });
+        db.collection('users').updateOne(
+            { username: user.username },
+            {
+                $push: { conversations: message },
+                $currentDate: { lastUpdate: true }
+            });
+        res.json(message);
+    } catch (e) {
+        res.send({ message: "Error in getting message." });
     }
 });
 
@@ -234,13 +282,13 @@ router.get("/showmessage", auth, async (req, res) => {
         let message = await Message.findById(req.body.id);
         if (req.user.id === message.receiver) {
             db.collection('messages').updateOne(
-                {id: message.id},
-                { $set: {unread: false} });
+                { id: message.id },
+                { $set: { unread: false } });
             message = await Message.findById(req.body.id);
         }
         res.json(message);
     } catch (e) {
-        res.send({ message: "Error in getting message."});
+        res.send({ message: "Error in getting message." });
     }
 });
 
