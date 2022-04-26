@@ -3,10 +3,6 @@ const mongoose = require("mongoose");
 const User = require("../models/User");
 
 const MessageSchema = mongoose.Schema({
-    messageId: {
-        type: String,
-        required: true,
-    },
     sender: {
         type: User,
         required: true,
@@ -31,7 +27,8 @@ const MessageSchema = mongoose.Schema({
         type: Boolean,
         default: true,
     }
-});
+},
+    { 'collection': 'messages' });
 
 // export model user with UserSchema
 module.exports = mongoose.model("message", MessageSchema);

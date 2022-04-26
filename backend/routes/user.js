@@ -229,19 +229,19 @@ router.post("/profilepic", auth, async (req, res) => {
     }
 });
 
-router.post("/sendmessage", auth, async (req, res) => {
-    try {
-        const user = await User.findById(req.user.id);
-        message = new Message({
-            sender: user.username,
-            receiver: 
-
-        });
-    }
-});
-
 router.get("/showmessage", auth, async (req, res) => {
-
+    try {
+        let message = await Message.findById(req.body.id);
+        if (req.user.id === message.receiver) {
+            db.collection('messages').updateOne(
+                {id: message.id},
+                { $set: {unread: false} });
+            message = await Message.findById(req.body.id);
+        }
+        res.json(message);
+    } catch (e) {
+        res.send({ message: "Error in getting message."});
+    }
 });
 
 //figure out how profiles are chosen to display
