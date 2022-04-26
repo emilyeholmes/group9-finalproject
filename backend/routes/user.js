@@ -272,7 +272,7 @@ router.get("/sendmessage", auth, async (req, res) => {
             });
         res.json(message);
     } catch (e) {
-        res.send({ message: "Error in getting message." });
+        res.send({ message: "Error in sending message." });
     }
 });
 
