@@ -31,7 +31,7 @@ const NavLink = ({ children }: { children: ReactNode }) => (
       textDecoration: 'none',
       bg: useColorModeValue('#665C97', '#665C97'),
     }}
-    href={'#665C97'}>
+    href={'#'}>
     {children}
   </Link>
 );
@@ -56,10 +56,19 @@ export default function Simple() {
               as={'nav'}
               spacing={4}
               display={{ base: 'none', md: 'flex' }}>
+                <NavLink to ='/'>Home</NavLink>
+                <NavLink>Discover</NavLink>
+                <NavLink to='/messages'>Matches</NavLink>
+                <NavLink to='/about'>About Us</NavLink>
+            </HStack>
+            {/* <HStack
+              as={'nav'}
+              spacing={4}
+              display={{ base: 'none', md: 'flex' }}>
               {Links.map((link) => (
                 <NavLink key={link}>{link}</NavLink>
               ))}
-            </HStack>
+            </HStack> */}
           </HStack>
           <Flex alignItems={'center'}>
             <Menu>
