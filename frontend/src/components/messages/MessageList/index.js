@@ -7,9 +7,11 @@ import moment from 'moment';
 
 import './MessageList.css';
 
-const MY_USER_ID = 'apple';
+const MY_USER_ID = 'sally';
 
-var tempMessages;
+var tempMessages = [];
+var conversations;
+var message;
 
 export default function MessageList(props) {
   const [messages, setMessages] = useState([])
@@ -19,7 +21,8 @@ export default function MessageList(props) {
   }, [])
 
 
-  const getMessages = () => {
+  const  getMessages = async () => {
+    console.log("I FIRE ONCE");
     var axios = require('axios');
     var data = '';
 
@@ -27,19 +30,54 @@ export default function MessageList(props) {
       method: 'get',
       url: 'http://localhost:4000/user/profile',
       headers: {
-        'token': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoiNjI2OGMyOWYzNGQ5MTEzOTFiNmUzOTMwIn0sImlhdCI6MTY1MTAzMjczNSwiZXhwIjoxNjUxMDQyNzM1fQ.mXoG-q616k47gWen0DY1HNkvpX-DLHkJVnIXOAj28oM'
+        'token': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoiNjI2OTkzZWZjYjViMTY0OGQ5NjIxYjE5In0sImlhdCI6MTY1MTA4NjMxOSwiZXhwIjoxNjUxMDk2MzE5fQ.ZiN3E65WvugINviYnowLHOuDPq-dnJ-REpAxFzIzVFg'
       },
       data: data
     };
 
-    axios(config)
-      .then(function (response) {
-        tempMessages = response.data.conversations;
-        setMessages(tempMessages);
-      })
-      .catch(function (error) {
-        console.log(error);
-      });
+    await axios(config)
+            .then(function (response) {
+              conversations = response.data.conversations;
+              console.log("Response: ", conversations.length);
+            })
+            .catch(function (error) {
+              console.log(error);
+            });
+
+    message = conversations[0];
+    
+    let counter = 20;
+    while (message != null && counter > 0) {
+      tempMessages.unshift(message);
+      console.log(counter, message);
+
+      if (message.previous == null) {
+        break;
+      }
+
+      let config2 = {
+        method: 'get',
+        url: 'http://localhost:4000/user/showmessage',
+        headers: {
+          'token': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoiNjI2OTkzZWZjYjViMTY0OGQ5NjIxYjE5In0sImlhdCI6MTY1MTA4NjMxOSwiZXhwIjoxNjUxMDk2MzE5fQ.ZiN3E65WvugINviYnowLHOuDPq-dnJ-REpAxFzIzVFg'
+        },
+        params: {
+          id : message.previous
+        }
+      }
+
+      await axios(config2)
+        .then(function (response) {
+          message = response.data;
+        })
+        .catch(function (error) {
+          console.log(error);
+        });
+      counter -= 1;
+    }
+    
+    setMessages(tempMessages);
+
     // var tempMessages = [
     //   {
     //     id: 1,
@@ -109,8 +147,6 @@ export default function MessageList(props) {
     try {
       let i = 0;
       let messageCount = messages.length;
-      // console.log(messages.length)
-      console.log(messages)
       let tempMessages = [];
 
       while (i < messageCount) {

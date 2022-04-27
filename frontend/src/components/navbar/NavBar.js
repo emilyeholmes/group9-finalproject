@@ -15,9 +15,11 @@ import {
   useDisclosure,
   useColorModeValue,
   Stack,
+  Text
 } from '@chakra-ui/react';
 import { HamburgerIcon, CloseIcon } from '@chakra-ui/icons';
-
+import './navbar.css'
+import logo from './ant_logo.png'
 
 const Links = [
                 {
@@ -67,7 +69,12 @@ export default function Simple() {
             onClick={isOpen ? onClose : onOpen}
           />
           <HStack spacing={8} alignItems={'center'}>
-            <Box>Antz</Box>
+            <Box display={'flex'} flexDirection={'row'} alignItems={'center'}>
+              <img src={logo} className={'logo'}/>
+              <Text>
+                Antz
+              </Text>
+              </Box>
             <HStack
               as={'nav'}
               spacing={4}
