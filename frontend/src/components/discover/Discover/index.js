@@ -1,10 +1,42 @@
 import {Spacer, Button, Flex, Box} from '@chakra-ui/react';
+import axios from 'axios';
+import React, { useEffect, useState } from 'react';
 import Card from '../Card';
 import LikeButton from '../LikeButton';
 import './Discover.css';
 
+var allUsers;
+
 export default function Discover() {
     document.body.style.background = '#FCF4ED';
+
+    const [matches, setMatches] = useState({});
+
+    useEffect(() => {
+      getPotentialMatch();
+    }, []);
+
+    const getPotentialMatch = () => {
+      var axios = require('axios');
+      var data = '';
+
+      var config = {
+        method: 'get',
+        url: 'http://localhost:4000/allusers/access',
+        data: data
+      };
+
+      axios(config)
+      .then(function (response) {
+        allUsers = response.data
+        console.log(allUsers);
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+      setMatches(allUsers);
+    }
+
     return (
         <div className='App-header'>
           <LikeButton />
