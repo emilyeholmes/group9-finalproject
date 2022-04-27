@@ -12,7 +12,7 @@ const MY_USER_ID = 'apple';
 var tempMessages;
 
 export default function MessageList(props) {
-  const [messages, setMessages] = useState({})
+  const [messages, setMessages] = useState([])
 
   useEffect(() => {
     getMessages();
@@ -34,10 +34,8 @@ export default function MessageList(props) {
 
     axios(config)
       .then(function (response) {
-        tempMessages = response.data.conversations;
-        console.log(tempMessages);
-        // console.log(JSON.stringify(response.data));
-        // console.log(typeof tempMessages)
+        tempMessages = Array(response.data.conversations);
+        setMessages(tempMessages);
       })
       .catch(function (error) {
         console.log(error);
@@ -104,14 +102,14 @@ export default function MessageList(props) {
     //     timestamp: new Date().getTime()
     //   },
     // ]
-    setMessages([messages, tempMessages])
+    // setMessages([...messages, ...tempMessages]);
   }
 
   const renderMessages = () => {
     try {
       let i = 0;
       let messageCount = messages.length;
-      console.log(messages.length)
+      // console.log(messages.length)
       console.log(messages)
       let tempMessages = [];
 
