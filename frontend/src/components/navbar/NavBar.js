@@ -19,9 +19,25 @@ import {
 import { HamburgerIcon, CloseIcon } from '@chakra-ui/icons';
 
 
-const Links = ['Home', 'Discover', 'Matches', 'About Us'];
+const Links = [
+                {
+                  text: 'Home',
+                  url: '/'
+                },
+                {
+                  text: 'Discover',
+                  url: '/discover'
+                },
+                {
+                  text: 'Matches',
+                  url: '/messages'
+                },
+                {
+                  text: 'About Us',
+                  url: '/about'}
+                ];
 
-const NavLink = ({ children }: { children: ReactNode }) => (
+const NavLink = ({ children }) => (
   <Link
     px={4}
     py={1}
@@ -31,8 +47,8 @@ const NavLink = ({ children }: { children: ReactNode }) => (
       textDecoration: 'none',
       bg: useColorModeValue('#665C97', '#665C97'),
     }}
-    href={'#'}>
-    {children}
+    href={children.url}>
+    {children.text}
   </Link>
 );
 
@@ -56,19 +72,10 @@ export default function Simple() {
               as={'nav'}
               spacing={4}
               display={{ base: 'none', md: 'flex' }}>
-                <NavLink to ='/'>Home</NavLink>
-                <NavLink>Discover</NavLink>
-                <NavLink to='/messages'>Matches</NavLink>
-                <NavLink to='/about'>About Us</NavLink>
-            </HStack>
-            {/* <HStack
-              as={'nav'}
-              spacing={4}
-              display={{ base: 'none', md: 'flex' }}>
               {Links.map((link) => (
                 <NavLink key={link}>{link}</NavLink>
               ))}
-            </HStack> */}
+            </HStack>
           </HStack>
           <Flex alignItems={'center'}>
             <Menu>
