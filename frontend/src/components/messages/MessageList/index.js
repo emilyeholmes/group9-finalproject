@@ -34,7 +34,7 @@ export default function MessageList(props) {
 
     axios(config)
       .then(function (response) {
-        tempMessages = Array(response.data.conversations);
+        tempMessages = response.data.conversations;
         setMessages(tempMessages);
       })
       .catch(function (error) {
