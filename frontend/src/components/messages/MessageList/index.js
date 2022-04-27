@@ -10,6 +10,7 @@ import './MessageList.css';
 const MY_USER_ID = 'apple';
 
 var tempMessages;
+var conversations;
 
 export default function MessageList(props) {
   const [messages, setMessages] = useState([])
@@ -34,12 +35,42 @@ export default function MessageList(props) {
 
     axios(config)
       .then(function (response) {
-        tempMessages = Array(response.data.conversations);
-        setMessages(tempMessages);
+        conversations = Array(response.data.conversations);
+        console.log(conversations[0]);
       })
       .catch(function (error) {
         console.log(error);
       });
+
+    var config2 = {
+      method: 'get',
+      url: 'http://localhost:4000/user/showmessage',
+      headers: {
+        'token': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoiNjI2OGMyOWYzNGQ5MTEzOTFiNmUzOTMwIn0sImlhdCI6MTY1MTAzMjczNSwiZXhwIjoxNjUxMDQyNzM1fQ.mXoG-q616k47gWen0DY1HNkvpX-DLHkJVnIXOAj28oM'
+      },
+      data: data
+    };
+
+    let counter = 10;
+    console.log(conversations);
+    let message = conversations[0];
+    while (message != null && counter > 0) {
+      tempMessages.push(message);
+      axios(config2)
+        .then(function (response) {
+          message = response.data;
+          console.log(message);
+        })
+        .catch(function (error) {
+          console.log(error);
+        });
+      counter -= 1;
+    }
+
+    setMessages(tempMessages);
+
+
+
     // var tempMessages = [
     //   {
     //     id: 1,
@@ -110,7 +141,7 @@ export default function MessageList(props) {
       let i = 0;
       let messageCount = messages.length;
       // console.log(messages.length)
-      console.log(messages)
+      // console.log(messages)
       let tempMessages = [];
 
       while (i < messageCount) {
