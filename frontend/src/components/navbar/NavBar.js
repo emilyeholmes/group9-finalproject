@@ -26,7 +26,7 @@ const Links = [
                 },
                 {
                   text: 'Discover',
-                  url: '/'
+                  url: '/discover'
                 },
                 {
                   text: 'Matches',
