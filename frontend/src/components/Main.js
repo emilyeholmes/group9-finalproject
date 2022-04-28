@@ -16,6 +16,7 @@ const Main = () => {
       <Route path='/about' element={<About />}></Route>
       <Route path='/messages' element={<Messenger />}></Route>
       <Route path='/profile' element={<Form />}></Route>
+      <Route path='/login' element={<Form />}></Route>
     </Routes>
   );
 }
