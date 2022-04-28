@@ -1,10 +1,11 @@
 import './App.css';
-import React from 'react';
+import React, { useState } from 'react';
 import NavBar from './components/navbar/NavBar';
 import { ChakraProvider, CSSReset, Box } from '@chakra-ui/react'
 import Main from './components/Main'
 
 function App() {
+
   return (
     <div>
       <CSSReset />
