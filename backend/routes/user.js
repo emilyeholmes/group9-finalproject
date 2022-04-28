@@ -43,7 +43,8 @@ router.post(
             });
         }
 
-        const { username, email, password, bio, emojigoal } = req.body;
+        const { username, email, password, bio, emojigoal, goal, age, aboutme1, aboutme2, aboutme3 } = req.body;
+        const conversations = [];
         try {
             let user = await User.findOne({
                 email,
@@ -64,7 +65,8 @@ router.post(
                 aboutme1,
                 aboutme2,
                 aboutme3,
-                emojigoal
+                emojigoal,
+                conversations
             });
 
             const salt = await bcrypt.genSalt(10);
@@ -262,6 +264,8 @@ router.post("/sendmessage", auth, async (req, res) => {
                 break;
             }
         }
+
+        console.log(req.body.text, user.username, otheruser.username);
 
         message = new Message({
             sender: user.username,
