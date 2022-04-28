@@ -45,7 +45,6 @@ export default function Login({ setToken }) {
         }
         await axios(config)
         .then((response) => {
-            //console.log(response.data.token);
             setToken(response.data.token);
         })
         .catch((error) => {

@@ -40,6 +40,10 @@ const Links = [
                 {
                   text: 'Login',
                   url: 'login'
+                },
+                {
+                  text: 'Signup',
+                  url: 'signup'
                 }
                 ];
 
