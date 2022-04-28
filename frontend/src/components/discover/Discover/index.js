@@ -16,29 +16,70 @@ export default function Discover() {
 
   const [alreadySeen, setAlreadySeen] = useState([]);
 
-  const [buttonPressed, setButtonPressed] = useState(0);
+  const [match, setMatch] = useState(false);
+
+  // const [buttonPressed, setButtonPressed] = useState(0);
 
   // const [allUsers, setAllUsers] = useState([]);
 
   useEffect(() => {
     getPotentialMatch();
-  }, [buttonPressed]);
+  }, []);
 
-  const buttonPress = () => {
-    setButtonPressed(buttonPressed + 1);
+  function checkMatch() {
+    var axios = require('axios');
+    var data = '';
+    var headers = {
+      'token': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoiNjI2YTJmNDFhODEzN2NkNzQ4ZTVlZjI0In0sImlhdCI6MTY1MTEyNjA4MSwiZXhwIjoxNjUxMTM2MDgxfQ.K8EVd31E7NPyPsxA9Kug_z3JeKNzHkBXURyc6lpnvFM'
+    }
+
+    var config = {
+      method: 'get',
+      url: 'http://localhost:4000/user/profile',
+      data: data
+    };
+
+    axios(config)
+      .then(function (response) {
+        var userProfile = response.data;
+        if (userProfile.potentialmatches.includes(randomProfile.username)) {
+          if (randomProfile.potentialmatches.includes(userProfile.username)) {
+            setMatch(true);
+            window.alert("You've got a match!")
+          }
+        }
+      })
   }
 
   function getRandom(allUsers) {
+    // if (bool) {
+    //   var axios = require('axios');
+    //   var data = {
+    //     otherusername: randomProfile.username
+    //   };
+    //   var headers = {
+    //     'token': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoiNjI2YTJmNDFhODEzN2NkNzQ4ZTVlZjI0In0sImlhdCI6MTY1MTEyNjA4MSwiZXhwIjoxNjUxMTM2MDgxfQ.K8EVd31E7NPyPsxA9Kug_z3JeKNzHkBXURyc6lpnvFM'
+    //   }
+
+    //   var config = {
+    //     method: 'post',
+    //     url: 'http://localhost:4000/user/potentialmatches',
+    //     data: data
+    //   };
+
+    //   axios(config)
+    //     .catch(function (error) {
+    //       console.log(error);
+    //     });
+
+    //   checkMatch();
+    // }
     const keys = Object.keys(allUsers);
     const randIndex = Math.floor(Math.random() * keys.length);
     const randKey = keys[randIndex];
-    const randomProfile = allUsers[randKey];
-    return randomProfile;
+    const randProfile = allUsers[randKey];
+    return randProfile;
   }
-
-  // const handleClick = () => {
-  //   setRandomProfile(getRandom);
-  // }
 
   const getPotentialMatch = () => {
     var axios = require('axios');
@@ -77,7 +118,7 @@ export default function Discover() {
 
   return (
     <div className='App-header'>
-      <LikeButton func={() => { setRandomProfile(getRandom(allUsers)) }} />
+      <LikeButton func1={() => { setRandomProfile(getRandom(allUsers)) }} />
       < Card name={randomProfile.username} age='22' intro={randomProfile.bio}
         goal='looking for a SWE summer internship' aboutme1='3 years of experience in data science'
         aboutme2='cookie lover' aboutme3='hungry' profilepic="https://news.berkeley.edu/wp-content/uploads/2016/09/Oskicupcake750.jpg"></Card>
