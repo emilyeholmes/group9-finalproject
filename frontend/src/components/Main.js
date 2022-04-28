@@ -7,6 +7,7 @@ import Messenger from './messages/Messenger';
 import Form from './profile/Form';
 import Discover from './discover/Discover';
 import Login from './login-signup/Login';
+import Signup from './login-signup/Signup';
 
 
 const Main = () => {
@@ -18,6 +19,7 @@ const Main = () => {
       <Route path='/messages' element={<Messenger />}></Route>
       <Route path='/profile' element={<Form />}></Route>
       <Route path='/login' element={<Login />}></Route>
+      <Route path='/signup' element={<Signup />}></Route>
     </Routes>
   );
 }
