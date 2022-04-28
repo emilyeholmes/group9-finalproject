@@ -56,9 +56,14 @@ router.post(
 
             user = new User({
                 username,
+                age,
                 email,
                 password,
                 bio,
+                goal,
+                aboutme1,
+                aboutme2,
+                aboutme3,
                 emojigoal
             });
 
@@ -247,15 +252,19 @@ router.post("/sendmessage", auth, async (req, res) => {
         let date_ob = new Date();
         let hours = date_ob.getHours();
         let minutes = date_ob.getMinutes();
-        let ourtimestamp = (hours + ":" + minutes);
+        if (minutes < 10) {
+            minutes = "0" + minutes;
+        }
+        // let ourtimestamp = (hours + ":" + minutes);
+        let ourtimestamp = date_ob;
         let lastmess = user.conversations != null ?
-                        user.conversations[user.conversations.length - 1] :
-                        null;
+            user.conversations[user.conversations.length - 1] :
+            null;
         // Iterate backwards throu
         let counter = user.conversations.length - 2;
-        while (lastmess != null && lastmess.sender != user.username 
+        while (lastmess != null && lastmess.sender != user.username
             && lastmess.sender != otheruser.username
-            && lastmess.receiver != user.username 
+            && lastmess.receiver != user.username
             && lastmess.receiver != otheruser.username) {
             lastmess = user.conversations[counter];
             counter -= 1;
@@ -268,7 +277,7 @@ router.post("/sendmessage", auth, async (req, res) => {
             previous: lastmess != null ? lastmess.id : null,
             unread: true
         });
-        
+
         await message.save();
 
         db.collection('users').updateOne(
@@ -286,7 +295,7 @@ router.post("/sendmessage", auth, async (req, res) => {
         res.json(message);
     } catch (e) {
         console.log(e);
-        res.send({ message: "Error in sending message." + e});
+        res.send({ message: "Error in sending message." + e });
     }
 });
 
@@ -296,15 +305,18 @@ router.get("/showmessage", auth, async (req, res) => {
         let user = await User.findById(req.user.id);
         if (message == null) {
             return res.status(400).json({
-                message: "Message Not Exist"});
+                message: "Message Not Exist"
+            });
         }
-        
+
         if (user.username === message.receiver) {
             console.log(user.username, message.receiver);
             db.collection('messages').updateOne(
                 { _id: ObjectId(req.body.id) },
-                { $set: { unread: true },
-                  $currentDate: { lastUpdate: true } });
+                {
+                    $set: { unread: true },
+                    $currentDate: { lastUpdate: true }
+                });
             message = await Message.findById(req.body.id);
         }
         res.json(message);
