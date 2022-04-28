@@ -34,6 +34,7 @@ export default function Homepage() {
           Find your professional match and connect with people with similar career interests to match for potential projects. Or simply use Antz to build your network!
         </Text>
         <Stack spacing={6} direction={'row'}>
+        <a href="http://localhost:3000/signup">
           <Button
             rounded={'full'}
             px={6}
@@ -42,6 +43,7 @@ export default function Homepage() {
             _hover={{ bg: '#382E6A' }}>
             Get started
           </Button>
+          </a>
           <a href="http://localhost:3000/login">
             <Button
               rounded={'full'}
