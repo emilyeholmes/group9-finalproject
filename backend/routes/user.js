@@ -244,45 +244,70 @@ router.post("/sendmessage", auth, async (req, res) => {
     try {
         const user = await User.findById(req.user.id);
         const otheruser = await User.findOne({ username: req.body.otherusername });
-        let date_ob = new Date();
-        let hours = date_ob.getHours();
-        let minutes = date_ob.getMinutes();
-        let ourtimestamp = (hours + ":" + minutes);
-        let lastmess = user.conversations != null ?
-                        user.conversations[user.conversations.length - 1] :
-                        null;
+        let ourtimestamp = new Date().getTime();
+        let lastmess = null;
+
         // Iterate backwards throu
-        let counter = user.conversations.length - 2;
-        while (lastmess != null && lastmess.sender != user.username 
-            && lastmess.sender != otheruser.username
-            && lastmess.receiver != user.username 
-            && lastmess.receiver != otheruser.username) {
-            lastmess = user.conversations[counter];
-            counter -= 1;
+        for (let i = 0; i < user.conversations.length; i++) {
+            if ((user.conversations[i].receiver === user.username && 
+                 user.conversations[i].sender === otheruser.username) ||
+                (user.conversations[i].receiver === otheruser.username && 
+                 user.conversations[i].sender === user.username)) {
+                lastmess = user.conversations[i];
+                break;
+            }
         }
+
         message = new Message({
             sender: user.username,
             receiver: otheruser.username,
             body: req.body.text,
-            timestamp: ourtimestamp,
-            previous: lastmess != null ? lastmess.id : null,
+            timestamp: String(ourtimestamp),
+            previous: lastmess != null ? lastmess._id : null,
             unread: true
         });
         
         await message.save();
-
-        db.collection('users').updateOne(
-            { username: otheruser.username },
-            {
-                $push: { conversations: message },
-                $currentDate: { lastUpdate: true }
-            });
-        db.collection('users').updateOne(
-            { username: user.username },
-            {
-                $push: { conversations: message },
-                $currentDate: { lastUpdate: true }
-            });
+        
+        if (lastmess == null) {
+            db.collection('users').updateOne(
+                { username: otheruser.username },
+                {
+                    $push: { conversations: message },
+                    $currentDate: { lastUpdate: true }
+                });
+            db.collection('users').updateOne(
+                { username: user.username },
+                {
+                    $push: { conversations: message },
+                    $currentDate: { lastUpdate: true }
+                });
+        } else {
+            db.collection('users').updateOne(
+                { username: otheruser.username },
+                {
+                    $pull: { conversations: { _id: ObjectId(lastmess._id) } },
+                    $currentDate: { lastUpdate: true }
+                });
+            db.collection('users').updateOne(
+                { username: otheruser.username },
+                {
+                    $push: { conversations: message },
+                    $currentDate: { lastUpdate: true }
+                });
+            db.collection('users').updateOne(
+                { username: user.username },
+                {
+                    $pull: { conversations: { _id: ObjectId(lastmess._id) } },
+                    $currentDate: { lastUpdate: true }
+                });
+            db.collection('users').updateOne(
+                { username: user.username },
+                {
+                    $push : {conversations: message },
+                    $currentDate: { lastUpdate: true }
+                });
+        }
         res.json(message);
     } catch (e) {
         console.log(e);
@@ -292,24 +317,23 @@ router.post("/sendmessage", auth, async (req, res) => {
 
 router.get("/showmessage", auth, async (req, res) => {
     try {
-        let message = await Message.findById(req.body.id);
+        let message = await Message.findById(ObjectId(req.query.id));
         let user = await User.findById(req.user.id);
         if (message == null) {
             return res.status(400).json({
                 message: "Message Not Exist"});
         }
         
-        if (user.username === message.receiver) {
-            console.log(user.username, message.receiver);
-            db.collection('messages').updateOne(
-                { _id: ObjectId(req.body.id) },
-                { $set: { unread: true },
-                  $currentDate: { lastUpdate: true } });
-            message = await Message.findById(req.body.id);
-        }
+        // if (user.username === message.receiver) {
+        //     db.collection('messages').updateOne(
+        //         { _id: ObjectId(req.body.id) },
+        //         { $set: { unread: true },
+        //           $currentDate: { lastUpdate: true } });
+        //     message = await Message.findById(req.params.id);
+        // }
         res.json(message);
     } catch (e) {
-        res.send({ message: "Error in getting message." });
+        res.send({ message: "Error in getting message." + e });
     }
 });
 
