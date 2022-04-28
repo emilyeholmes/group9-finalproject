@@ -36,7 +36,11 @@ const Links = [
                 },
                 {
                   text: 'About Us',
-                  url: '/about'}
+                  url: '/about'},
+                {
+                  text: 'Login',
+                  url: 'login'
+                }
                 ];
 
 const NavLink = ({ children }) => (

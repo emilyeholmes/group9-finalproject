@@ -5,7 +5,8 @@ import Homepage from './homepage/homepage';
 import About from './about/About';
 import Messenger from './messages/Messenger';
 import Form from './profile/Form';
-import Discover from './discover/Discover'
+import Discover from './discover/Discover';
+import Login from './login-signup/Login';
 
 
 const Main = () => {
@@ -16,7 +17,7 @@ const Main = () => {
       <Route path='/about' element={<About />}></Route>
       <Route path='/messages' element={<Messenger />}></Route>
       <Route path='/profile' element={<Form />}></Route>
-      <Route path='/login' element={<Form />}></Route>
+      <Route path='/login' element={<Login />}></Route>
     </Routes>
   );
 }
