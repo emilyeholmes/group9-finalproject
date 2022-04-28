@@ -7,7 +7,7 @@ import moment from 'moment';
 
 import './MessageList.css';
 
-const MY_USER_ID = 'sally';
+const MY_USER_ID = 'bob';
 
 var tempMessages = [];
 var conversations;
@@ -25,12 +25,13 @@ export default function MessageList(props) {
     console.log("I FIRE ONCE");
     var axios = require('axios');
     var data = '';
+    tempMessages = [];
 
     var config = {
       method: 'get',
       url: 'http://localhost:4000/user/profile',
       headers: {
-        'token': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoiNjI2OTkzZWZjYjViMTY0OGQ5NjIxYjE5In0sImlhdCI6MTY1MTA4NjMxOSwiZXhwIjoxNjUxMDk2MzE5fQ.ZiN3E65WvugINviYnowLHOuDPq-dnJ-REpAxFzIzVFg'
+        'token': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoiNjI2OTkzZDRjYjViMTY0OGQ5NjIxYjE2In0sImlhdCI6MTY1MTExOTE0MCwiZXhwIjoxNjUxMTIyNzQwfQ.pwgjv2-va0go2fZEst7cHNBHq31R_7H8YIsTmCdyTOc'
       },
       data: data
     };
@@ -59,7 +60,7 @@ export default function MessageList(props) {
         method: 'get',
         url: 'http://localhost:4000/user/showmessage',
         headers: {
-          'token': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoiNjI2OTkzZWZjYjViMTY0OGQ5NjIxYjE5In0sImlhdCI6MTY1MTA4NjMxOSwiZXhwIjoxNjUxMDk2MzE5fQ.ZiN3E65WvugINviYnowLHOuDPq-dnJ-REpAxFzIzVFg'
+          'token': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoiNjI2OTkzZDRjYjViMTY0OGQ5NjIxYjE2In0sImlhdCI6MTY1MTExOTE0MCwiZXhwIjoxNjUxMTIyNzQwfQ.pwgjv2-va0go2fZEst7cHNBHq31R_7H8YIsTmCdyTOc'
         },
         params: {
           id : message.previous

@@ -13,17 +13,34 @@ export default function ConversationList(props) {
     getConversations()
   },[])
 
- const getConversations = () => {
-    axios.get('https://randomuser.me/api/?results=20').then(response => {
-        let newConversations = response.data.results.map(result => {
-          return {
-            photo: result.picture.large,
-            name: `${result.name.first} ${result.name.last}`,
-            text: 'Hello world! This is a long message that needs to be truncated.'
-          };
+ const getConversations = async () => {
+    axios.get('http://localhost:4000/user/profile', {
+      headers: {token: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoiNjI2OTkzZDRjYjViMTY0OGQ5NjIxYjE2In0sImlhdCI6MTY1MTExOTE0MCwiZXhwIjoxNjUxMTIyNzQwfQ.pwgjv2-va0go2fZEst7cHNBHq31R_7H8YIsTmCdyTOc'}
+    }).then(async response => {
+      let newConversations = await Promise.all(response.data.conversations.map(async result => {
+        let other = result.receiver === response.username ? result.sender : result.receiver;
+        let otherbio = await axios.get('http://localhost:4000/allusers/access').then(response => {
+          return response.data[other].bio;
         });
-        setConversations([...conversations, ...newConversations])
-    });
+        console.log(otherbio);
+        return {
+          photo: 'https://randomuser.me/api/portraits/men/64.jpg',
+          name: other,
+          text: otherbio
+        }
+      }));
+      setConversations(newConversations);
+    })
+    // axios.get('https://randomuser.me/api/?results=20').then(response => {
+    //     let newConversations = response.data.results.map(result => {
+    //       return {
+    //         photo: result.picture.large,
+    //         name: `${result.name.first} ${result.name.last}`,
+    //         text: 'Hello world! This is a long message that needs to be truncated.'
+    //       };
+    //     });
+    //     setConversations([...conversations, ...newConversations])
+    // });
   }
 
     return (
