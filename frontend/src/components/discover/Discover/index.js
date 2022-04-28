@@ -51,29 +51,55 @@ export default function Discover() {
       })
   }
 
-  function getRandom(allUsers) {
-    // if (bool) {
-    //   var axios = require('axios');
-    //   var data = {
-    //     otherusername: randomProfile.username
-    //   };
-    //   var headers = {
-    //     'token': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoiNjI2YTJmNDFhODEzN2NkNzQ4ZTVlZjI0In0sImlhdCI6MTY1MTEyNjA4MSwiZXhwIjoxNjUxMTM2MDgxfQ.K8EVd31E7NPyPsxA9Kug_z3JeKNzHkBXURyc6lpnvFM'
-    //   }
+  function causeMatch(bool) {
+    if (bool) {
+      window.alert("You've got a match!");
+    }
+    var axios = require('axios');
+    var data = {
+      otherusername: randomProfile.username,
+      text: "This is the start of your conversation."
+    };
+    var headers = {
+      'token': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoiNjI2YTJmNDFhODEzN2NkNzQ4ZTVlZjI0In0sImlhdCI6MTY1MTEyNjA4MSwiZXhwIjoxNjUxMTM2MDgxfQ.K8EVd31E7NPyPsxA9Kug_z3JeKNzHkBXURyc6lpnvFM'
+    }
 
-    //   var config = {
-    //     method: 'post',
-    //     url: 'http://localhost:4000/user/potentialmatches',
-    //     data: data
-    //   };
+    var config = {
+      method: 'post',
+      url: 'http://localhost:4000/user/sendmessage',
+      data: data
+    };
 
-    //   axios(config)
-    //     .catch(function (error) {
-    //       console.log(error);
-    //     });
+    axios(config)
+      .catch(function (error) {
+        console.log(error);
+      });
 
-    //   checkMatch();
-    // }
+  }
+
+  function getRandom(allUsers, bool) {
+    if (bool) {
+      var axios = require('axios');
+      var data = {
+        otherusername: randomProfile.username
+      };
+      var headers = {
+        'token': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoiNjI2YTJmNDFhODEzN2NkNzQ4ZTVlZjI0In0sImlhdCI6MTY1MTEyNjA4MSwiZXhwIjoxNjUxMTM2MDgxfQ.K8EVd31E7NPyPsxA9Kug_z3JeKNzHkBXURyc6lpnvFM'
+      }
+
+      var config = {
+        method: 'post',
+        url: 'http://localhost:4000/user/potentialmatches',
+        data: data
+      };
+
+      axios(config)
+        .catch(function (error) {
+          console.log(error);
+        });
+
+      checkMatch();
+    }
     const keys = Object.keys(allUsers);
     const randIndex = Math.floor(Math.random() * keys.length);
     const randKey = keys[randIndex];
@@ -94,9 +120,6 @@ export default function Discover() {
     axios(config)
       .then(function (response) {
         allUsers = response.data;
-        // const keys = Object.keys(allUsers);
-        // const randIndex = Math.floor(Math.random() * keys.length);
-        // const randKey = keys[randIndex];
         const randomProfile = getRandom(allUsers);
         // setAllUsers(response.data);
         const randProfile = getRandom(allUsers);
@@ -118,10 +141,10 @@ export default function Discover() {
 
   return (
     <div className='App-header'>
-      <LikeButton func1={() => { setRandomProfile(getRandom(allUsers)) }} />
-      < Card name={randomProfile.username} age='22' intro={randomProfile.bio}
-        goal='looking for a SWE summer internship' aboutme1='3 years of experience in data science'
-        aboutme2='cookie lover' aboutme3='hungry' profilepic="https://news.berkeley.edu/wp-content/uploads/2016/09/Oskicupcake750.jpg"></Card>
+      <LikeButton func1={() => { setRandomProfile(getRandom(allUsers)) }} func2={causeMatch} />
+      < Card name="Oski Bear" age="81" intro={randomProfile.bio}
+        goal={randomProfile.goal} aboutme1={randomProfile.aboutme1}
+        aboutme2={randomProfile.aboutme2} aboutme3={randomProfile.aboutme3} profilepic="https://news.berkeley.edu/wp-content/uploads/2016/09/Oskicupcake500-1.jpg"></Card>
     </div>
   );
 }

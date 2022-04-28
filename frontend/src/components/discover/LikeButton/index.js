@@ -6,7 +6,7 @@ import { BsFillHeartFill } from 'react-icons/bs'
 const LikeButton = (props) => {
     return (
         <Stack direction='row' spacing={8} marginTop={1}>
-            <Button onClick={props.func1} leftIcon={<FaThumbsDown />} color='#665C97' borderColor={'#665C97'} variant={'outline'}>
+            <Button onClick={props.func2(true)} leftIcon={<FaThumbsDown />} color='#665C97' borderColor={'#665C97'} variant={'outline'}>
                 Maybe Later
             </Button>
             <Button onClick={props.func1} rightIcon={<BsFillHeartFill />} bgColor='#665C97' variant='solid'>
