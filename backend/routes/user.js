@@ -152,7 +152,7 @@ router.post(
                 }
             );
         } catch (e) {
-            console.error(e);
+            console.log(e);
             res.status(500).json({
                 message: "Server Error"
             });
@@ -249,40 +249,18 @@ router.post("/sendmessage", auth, async (req, res) => {
     try {
         const user = await User.findById(req.user.id);
         const otheruser = await User.findOne({ username: req.body.otherusername });
-<<<<<<< HEAD
-        let date_ob = new Date();
-        let hours = date_ob.getHours();
-        let minutes = date_ob.getMinutes();
-        if (minutes < 10) {
-            minutes = "0" + minutes;
-        }
-        // let ourtimestamp = (hours + ":" + minutes);
-        let ourtimestamp = date_ob;
-        let lastmess = user.conversations != null ?
-            user.conversations[user.conversations.length - 1] :
-            null;
-        // Iterate backwards throu
-        let counter = user.conversations.length - 2;
-        while (lastmess != null && lastmess.sender != user.username
-            && lastmess.sender != otheruser.username
-            && lastmess.receiver != user.username
-            && lastmess.receiver != otheruser.username) {
-            lastmess = user.conversations[counter];
-            counter -= 1;
-=======
         let ourtimestamp = new Date().getTime();
         let lastmess = null;
 
         // Iterate backwards throu
         for (let i = 0; i < user.conversations.length; i++) {
-            if ((user.conversations[i].receiver === user.username && 
-                 user.conversations[i].sender === otheruser.username) ||
-                (user.conversations[i].receiver === otheruser.username && 
-                 user.conversations[i].sender === user.username)) {
+            if ((user.conversations[i].receiver === user.username &&
+                user.conversations[i].sender === otheruser.username) ||
+                (user.conversations[i].receiver === otheruser.username &&
+                    user.conversations[i].sender === user.username)) {
                 lastmess = user.conversations[i];
                 break;
             }
->>>>>>> edc77efd808948e35644b374f441cf686a88fd00
         }
 
         message = new Message({
@@ -295,7 +273,7 @@ router.post("/sendmessage", auth, async (req, res) => {
         });
 
         await message.save();
-        
+
         if (lastmess == null) {
             db.collection('users').updateOne(
                 { username: otheruser.username },
@@ -331,7 +309,7 @@ router.post("/sendmessage", auth, async (req, res) => {
             db.collection('users').updateOne(
                 { username: user.username },
                 {
-                    $push : {conversations: message },
+                    $push: { conversations: message },
                     $currentDate: { lastUpdate: true }
                 });
         }
@@ -351,20 +329,7 @@ router.get("/showmessage", auth, async (req, res) => {
                 message: "Message Not Exist"
             });
         }
-<<<<<<< HEAD
 
-        if (user.username === message.receiver) {
-            console.log(user.username, message.receiver);
-            db.collection('messages').updateOne(
-                { _id: ObjectId(req.body.id) },
-                {
-                    $set: { unread: true },
-                    $currentDate: { lastUpdate: true }
-                });
-            message = await Message.findById(req.body.id);
-        }
-=======
-        
         // if (user.username === message.receiver) {
         //     db.collection('messages').updateOne(
         //         { _id: ObjectId(req.body.id) },
@@ -372,7 +337,6 @@ router.get("/showmessage", auth, async (req, res) => {
         //           $currentDate: { lastUpdate: true } });
         //     message = await Message.findById(req.params.id);
         // }
->>>>>>> edc77efd808948e35644b374f441cf686a88fd00
         res.json(message);
     } catch (e) {
         res.send({ message: "Error in getting message." + e });
