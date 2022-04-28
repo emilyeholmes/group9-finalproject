@@ -2,6 +2,7 @@ import { Box, Text, Flex, Stack, Heading } from '@chakra-ui/react';
 import React from 'react';
 import Emoji from '../Emoji';
 import SocialButton from '../SocialButton'
+import './Card.css';
 
 
 const Card = (props) => {
@@ -21,7 +22,7 @@ const Card = (props) => {
                 </Box>
                 <Stack direction='row' spacing={8} marginTop={6} justifyContent={'center'}>
                     {/* <Box w='300px' h='300px' bg='pink' rounded='20px'></Box> */}
-                    <img src={props.profilepic} width='500px' height='300px' border-radius='5px'></img>
+                    <img src={props.profilepic} width='500px' height='10px' border-radius='5px'></img>
                     {/* <img src="https://news.berkeley.edu/wp-content/uploads/2016/09/Oskicupcake750.jpg" width='500px' height='300px' border-radius='5px'></img> */}
                     {/* <Box w='300px' h='300px' bg='pink' rounded='20px'></Box> */}
                 </Stack>

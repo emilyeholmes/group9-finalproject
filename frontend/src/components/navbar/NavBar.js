@@ -108,12 +108,15 @@ export default function Simple() {
                 />
               </MenuButton>
               <MenuList>
-                <Link to="/profile">
-                  <MenuItem>Link 1</MenuItem>
-                </Link>
-                <MenuItem>Link 2</MenuItem>
+                {/* <Link to="/profile">
+                  <MenuItem>Edit Profile</MenuItem>
+                </Link> */}
+                {/* <MenuItem>Link 2</MenuItem> */}
+                <a href="http://localhost:3000/profile">
+                  <MenuItem>Edit Profile</MenuItem>
+                </a>
                 <MenuDivider />
-                <MenuItem>Link 3</MenuItem>
+                <MenuItem>Log out</MenuItem>
               </MenuList>
             </Menu>
           </Flex>
