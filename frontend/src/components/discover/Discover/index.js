@@ -143,9 +143,12 @@ export default function Discover() {
   return (
     <div className='App-header'>
       <LikeButton func1={() => { setRandomProfile(getRandom(allUsers)) }} func2={causeMatch} />
-      < Card name="Oski Bear" age="81" intro={randomProfile.bio}
+      <Card name="Oski Bear" age="81" intro="Go bears!" goal="Looking for a software engineering internship."
+        aboutme1="I love Berkeley!" aboutme2="My favorite colors are blue and gold." aboutme3="I interned at Amazon last year."
+        profilepic="https://news.berkeley.edu/wp-content/uploads/2016/09/Oskicupcake500-1.jpg"> </Card>
+      {/* < Card name="Oski Bear" age="81" intro={randomProfile.bio}
         goal={randomProfile.goal} aboutme1={randomProfile.aboutme1}
-        aboutme2={randomProfile.aboutme2} aboutme3={randomProfile.aboutme3} profilepic={randomProfile.profileurl} ></Card>
+        aboutme2={randomProfile.aboutme2} aboutme3={randomProfile.aboutme3} profilepic={randomProfile.profileurl} ></Card> */}
     </div>
   );
 
