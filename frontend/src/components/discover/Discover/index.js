@@ -54,6 +54,7 @@ export default function Discover() {
   function causeMatch(bool) {
     if (bool) {
       window.alert("You've got a match!");
+      setRandomProfile(getRandom(allUsers));
     }
     var axios = require('axios');
     var data = {
@@ -120,7 +121,7 @@ export default function Discover() {
     axios(config)
       .then(function (response) {
         allUsers = response.data;
-        const randomProfile = getRandom(allUsers);
+        // const randomProfile = getRandom(allUsers);
         // setAllUsers(response.data);
         const randProfile = getRandom(allUsers);
         if (alreadySeen.includes(randProfile)) {
@@ -130,8 +131,8 @@ export default function Discover() {
           randProfile = getRandom(allUsers);
         }
         setRandomProfile(randProfile);
-        setAlreadySeen(alreadySeen.push(randomProfile));
-        console.log(randomProfile);
+        setAlreadySeen(alreadySeen.push(randProfile));
+        console.log(randProfile);
       })
       .catch(function (error) {
         console.log(error);
@@ -144,7 +145,9 @@ export default function Discover() {
       <LikeButton func1={() => { setRandomProfile(getRandom(allUsers)) }} func2={causeMatch} />
       < Card name="Oski Bear" age="81" intro={randomProfile.bio}
         goal={randomProfile.goal} aboutme1={randomProfile.aboutme1}
-        aboutme2={randomProfile.aboutme2} aboutme3={randomProfile.aboutme3} profilepic="https://news.berkeley.edu/wp-content/uploads/2016/09/Oskicupcake500-1.jpg"></Card>
+        aboutme2={randomProfile.aboutme2} aboutme3={randomProfile.aboutme3} profilepic={randomProfile.profileurl} ></Card>
     </div>
   );
+
+  //profilepic="https://news.berkeley.edu/wp-content/uploads/2016/09/Oskicupcake500-1.jpg"
 }
