@@ -7,18 +7,19 @@ import axios from 'axios';
 
 import './ConversationList.css';
 
-export default function ConversationList(props) {
+export default function ConversationList({ token, key, setConversationId }) {
   const [conversations, setConversations] = useState([]);
+
   useEffect(() => {
     getConversations()
   },[])
 
  const getConversations = async () => {
     axios.get('http://localhost:4000/user/profile', {
-      headers: {token: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoiNjI2OTkzZDRjYjViMTY0OGQ5NjIxYjE2In0sImlhdCI6MTY1MTExOTE0MCwiZXhwIjoxNjUxMTIyNzQwfQ.pwgjv2-va0go2fZEst7cHNBHq31R_7H8YIsTmCdyTOc'}
+      headers: {token: token}
     }).then(async response => {
       let newConversations = await Promise.all(response.data.conversations.map(async result => {
-        let other = result.receiver === response.username ? result.sender : result.receiver;
+        let other = result.receiver === response.data.username ? result.sender : result.receiver;
         let otherbio = await axios.get('http://localhost:4000/allusers/access').then(response => {
           return response.data[other].bio;
         });
@@ -30,39 +31,44 @@ export default function ConversationList(props) {
         }
       }));
       setConversations(newConversations);
+      if (conversations.length > 0) {
+        let data = {
+          index: 0
+        }
+        setConversationId({...data});
+      }
     })
-    // axios.get('https://randomuser.me/api/?results=20').then(response => {
-    //     let newConversations = response.data.results.map(result => {
-    //       return {
-    //         photo: result.picture.large,
-    //         name: `${result.name.first} ${result.name.last}`,
-    //         text: 'Hello world! This is a long message that needs to be truncated.'
-    //       };
-    //     });
-    //     setConversations([...conversations, ...newConversations])
-    // });
   }
 
-    return (
-      <div className="conversation-list">
-        <Toolbar
-          title="Matches"
-          leftItems={[
-            <ToolbarButton key="cog" icon="ion-ios-cog" />
-          ]}
-          rightItems={[
-            <ToolbarButton key="add" icon="ion-ios-add-circle-outline" />
-          ]}
-        />
-        <ConversationSearch />
-        {
-          conversations.map(conversation =>
-            <ConversationListItem
-              key={conversation.name}
-              data={conversation}
-            />
-          )
-        }
-      </div>
-    );
+  const updateConversations = async (index) => {
+    let data = {
+      index: index
+    }
+    await setConversationId({...data});
+  }
+
+  return (
+    <div className="conversation-list">
+      <Toolbar
+        title="Matches"
+        leftItems={[
+          <ToolbarButton key="cog" icon="ion-ios-cog" />
+        ]}
+        rightItems={[
+          <ToolbarButton key="add" icon="ion-ios-add-circle-outline" />
+        ]}
+      />
+      <ConversationSearch />
+      {
+        conversations.map((conversation, index) =>
+          <ConversationListItem
+            key={conversation.name}
+            data={conversation}
+            onClick={async (e) => await updateConversations(index)}
+            id={index}
+          />
+        )
+      }
+    </div>
+  );
 }

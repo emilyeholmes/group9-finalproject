@@ -4,81 +4,119 @@ import Toolbar from '../Toolbar';
 import ToolbarButton from '../ToolbarButton';
 import Message from '../Message';
 import moment from 'moment';
+import {
+  Input,
+  FormControl,
+  InputGroup
+} from "@chakra-ui/react";
 
 import './MessageList.css';
+import axios from 'axios';
 
-const MY_USER_ID = 'bob';
+let MY_USER_ID = '';
 
 var tempMessages = [];
 var conversations;
 var message;
 
-export default function MessageList(props) {
-  const [messages, setMessages] = useState([])
+export default function MessageList({ token, key }) {
+  const [otherPerson, setOtherPerson] = useState([]);
+  const [messages, setMessages] = useState([]);
+  const [nextMessage, setNextMessage] = useState([]); 
 
   useEffect(() => {
     getMessages();
   }, [])
 
-
-  const  getMessages = async () => {
-    console.log("I FIRE ONCE");
-    var axios = require('axios');
-    var data = '';
-    tempMessages = [];
-
+  const sendMessage = async(e) => {
+    e.preventDefault();
     var config = {
-      method: 'get',
-      url: 'http://localhost:4000/user/profile',
+      method: 'POST',
+      url: 'http://localhost:4000/user/sendmessage',
       headers: {
-        'token': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoiNjI2OTkzZDRjYjViMTY0OGQ5NjIxYjE2In0sImlhdCI6MTY1MTExOTE0MCwiZXhwIjoxNjUxMTIyNzQwfQ.pwgjv2-va0go2fZEst7cHNBHq31R_7H8YIsTmCdyTOc'
+        'token': token,
       },
-      data: data
-    };
+      data: {
+        otherusername: otherPerson,
+        text: nextMessage
+      }
+    }
 
     await axios(config)
-            .then(function (response) {
-              conversations = response.data.conversations;
-              console.log("Response: ", conversations.length);
-            })
-            .catch(function (error) {
-              console.log(error);
-            });
+      .then(function (response) {
+        console.log(response);
+      })
+      .catch(function (error) {
+        console.log(error);
+      })
+  }
 
-    message = conversations[0];
-    
-    let counter = 20;
-    while (message != null && counter > 0) {
-      tempMessages.unshift(message);
-      console.log(counter, message);
+  const  getMessages = async () => {
+    console.log(key);
 
-      if (message.previous == null) {
-        break;
-      }
+    if (true) {
+      console.log("I FIRE ONCE");
+      var axios = require('axios');
+      var data = '';
+      tempMessages = [];
 
-      let config2 = {
+      var config = {
         method: 'get',
-        url: 'http://localhost:4000/user/showmessage',
+        url: 'http://localhost:4000/user/profile',
         headers: {
-          'token': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoiNjI2OTkzZDRjYjViMTY0OGQ5NjIxYjE2In0sImlhdCI6MTY1MTExOTE0MCwiZXhwIjoxNjUxMTIyNzQwfQ.pwgjv2-va0go2fZEst7cHNBHq31R_7H8YIsTmCdyTOc'
+          'token': token,
         },
-        params: {
-          id : message.previous
+        data: data
+      };
+
+      await axios(config)
+              .then(function (response) {
+                conversations = response.data.conversations;
+                MY_USER_ID = response.data.username;
+                console.log(MY_USER_ID);
+                console.log("Response: ", conversations.length);
+              })
+              .catch(function (error) {
+                console.log(error);
+              });
+
+      message = conversations[0];
+      setOtherPerson(MY_USER_ID === conversations[0].sender ? conversations[0].receiver : conversations[0].receiver);      
+
+      let counter = 20;
+      while (message != null && counter > 0) {
+        tempMessages.unshift(message);
+        console.log(counter, message);
+
+        if (message.previous == null) {
+          break;
         }
+
+        let config2 = {
+          method: 'get',
+          url: 'http://localhost:4000/user/showmessage',
+          headers: {
+            'token': token
+          },
+          params: {
+            id : message.previous
+          }
+        }
+
+        await axios(config2)
+          .then(function (response) {
+            message = response.data;
+          })
+          .catch(function (error) {
+            console.log(error);
+          });
+        counter -= 1;
       }
-
-      await axios(config2)
-        .then(function (response) {
-          message = response.data;
-        })
-        .catch(function (error) {
-          console.log(error);
-        });
-      counter -= 1;
+      
+      setMessages(tempMessages);
+    } else {
+      setMessages([]);
     }
-    
-    setMessages(tempMessages);
-
     // var tempMessages = [
     //   {
     //     id: 1,
@@ -220,7 +258,15 @@ export default function MessageList(props) {
 
       <div className="message-list-container">{renderMessages()}</div>
 
-      <Compose rightItems={[
+      <input
+            outline='none'
+            type="text"
+            className="compose-input"
+            placeholder="Type a message, @name"
+            onchange={(e) => console.log("ASDASDA")}
+          />
+
+      <Compose setMessage={setNextMessage} sendMessage={sendMessage} rightItems={[
         <ToolbarButton key="photo" icon="ion-ios-camera" />,
         <ToolbarButton key="image" icon="ion-ios-image" />,
         <ToolbarButton key="audio" icon="ion-ios-mic" />,

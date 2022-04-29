@@ -7,12 +7,9 @@ import Messenger from './messages/Messenger';
 import Form from './profile/Form';
 import Discover from './discover/Discover';
 import Login from './login-signup/Login';
-import useToken from './useToken';
 import Signup from './login-signup/Signup';
 
-
-const Main = () => {
-  const { token, setToken } = useToken();
+const Main = ({ token, setToken }) => {
   
   return (
     <Routes>
@@ -22,7 +19,7 @@ const Main = () => {
       <Route path='/messages' element={!token ? <Navigate to="/login" /> :  <Messenger token={token}/>}></Route>
       <Route path='/profile' element={!token ? <Navigate to="/login" /> :  <Form token={token}/>}></Route>
       <Route path='/login' element={!token ? <Login setToken={setToken} /> : <Navigate to="/discover" />}></Route>
-      <Route path='/signup' element={<Signup />}></Route>
+      <Route path='/signup' element={!token ? <Signup setToken={setToken} /> : <Navigate to="/discover" />}></Route>
     </Routes>
   );
 }

@@ -123,7 +123,7 @@ export default function Login({ setToken }) {
                 </Stack>
                 <Box>
                     Don't have an account?{" "}
-                    <Link color="orange.500" href="#">
+                    <Link color="orange.500" href="/signup">
                     Sign Up
                     </Link>
                 </Box>

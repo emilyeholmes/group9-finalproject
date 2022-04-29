@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import ConversationList from '../ConversationList';
 import MessageList from '../MessageList';
 import NavBar from '../../navbar/NavBar';
@@ -6,7 +6,9 @@ import './Messenger.css';
 import { ChakraProvider, CSSReset, Box } from '@chakra-ui/react'
 import { HamburgerIcon, CloseIcon } from '@chakra-ui/icons';
 
-export default function Messenger(props) {
+export default function Messenger({ token }) {
+    const [ conversationId, setConversationId ] = useState();
+
     return (
       <div>
         
@@ -31,11 +33,11 @@ export default function Messenger(props) {
           /> */}
 
           <div className="scrollable sidebar">
-            <ConversationList />
+            <ConversationList token={token} key={conversationId} setConversationId={setConversationId} />
           </div>
 
           <div className="scrollable content">
-            <MessageList />
+            <MessageList token={token} key={conversationId} />
           </div>
         </div>
       </div>

@@ -25,7 +25,7 @@ import { FaUserAlt, FaLock, FaMailBulk, FaPaperclip, FaSmile } from "react-icons
 const CFaUserAlt = chakra(FaUserAlt);
 const CFaLock = chakra(FaLock);
 
-export default function Signup(props) {
+export default function Signup({ setToken }) {
     const [ email, setEmail ] = useState();
     const [ username, setUsername ] = useState();
     const [ password, setPassword ] = useState();
@@ -36,18 +36,24 @@ export default function Signup(props) {
         event.preventDefault();
         let config = {
             method: 'POST',
-            url: 'http://localhost:4000/user/login',
+            url: 'http://localhost:4000/user/signup',
             data: {
-                email: email,
-                username: username,
-                password: password,
-                bio: bio,
-                emojigoal: emoji
+                "username": username,
+                "email": email,
+                "password": password,
+                "bio": bio,
+                "profileurl": emoji,
+                "goal": "k",
+                "emojigoal": "asd",
+                "age": 2,
+                "aboutme1": "Asd",
+                "aboutme2": "asdad",
+                "aboutme3":"asfafa"
             }
         }
         await axios(config)
         .then((response) => {
-            console.log("SUCCESS");
+            setToken(response.data.token);
         })
         .catch((error) => {
             console.log(error);
@@ -72,7 +78,7 @@ export default function Signup(props) {
                     <Image src={logo} alt='logo' />
                     <Heading>Sign up Now!</Heading>
                     <Box minW={{base: "90%", md: "468px"}}>
-                        <form>
+                        <form onSubmit={handleSubmit}>
                             <Stack
                                 spacing={4}
                                 p="4rem"
@@ -85,7 +91,10 @@ export default function Signup(props) {
                                             pointerEvents="none"
                                             children={<FaMailBulk color="gray" />}
                                         />
-                                        <Input type="email" placeholder="Email Address" />
+                                        <Input 
+                                            type="email" 
+                                            placeholder="Email Address" 
+                                            onChange={event => setEmail(event.target.value)}/>
                                     </InputGroup>
                                 </FormControl>
                                 <FormControl>
@@ -96,6 +105,7 @@ export default function Signup(props) {
                                         />
                                         <Input
                                             placeholder="Username"
+                                            onChange={event => setUsername(event.target.value)}
                                         />
                                     </InputGroup>
                                 </FormControl>
@@ -106,7 +116,9 @@ export default function Signup(props) {
                                             children={<CFaLock color="gray" />}
                                         />
                                         <Input
+                                            type= "password"
                                             placeholder="Password"
+                                            onChange={event => setPassword(event.target.value)}
                                         />
                                     </InputGroup>
                                 </FormControl>
@@ -118,6 +130,7 @@ export default function Signup(props) {
                                         />
                                         <Input size="lg"
                                             placeholder="Bio"
+                                            onChange={event => setBio(event.target.value)}
                                         />
                                     </InputGroup>
                                 </FormControl>
@@ -129,6 +142,7 @@ export default function Signup(props) {
                                         />
                                         <Input
                                             placeholder="Emoji"
+                                            onChange={event => setEmoji(event.target.value)}
                                         />
                                     </InputGroup>
                                 </FormControl>

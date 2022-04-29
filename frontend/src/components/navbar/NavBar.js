@@ -62,7 +62,7 @@ const NavLink = ({ children }) => (
   </Link>
 );
 
-export default function Simple() {
+export default function Simple( { setToken } ) {
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   return (
@@ -116,7 +116,9 @@ export default function Simple() {
                   <MenuItem>Edit Profile</MenuItem>
                 </a>
                 <MenuDivider />
-                <MenuItem>Log out</MenuItem>
+                <button onClick={() => setToken(null)}>
+                  <MenuItem>Log out</MenuItem>
+                </button>
               </MenuList>
             </Menu>
           </Flex>

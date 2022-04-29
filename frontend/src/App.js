@@ -3,14 +3,16 @@ import React, { useState } from 'react';
 import NavBar from './components/navbar/NavBar';
 import { ChakraProvider, CSSReset, Box } from '@chakra-ui/react'
 import Main from './components/Main'
+import useToken from './components/useToken';
 
 function App() {
-
+  const { token, setToken } = useToken();
+  
   return (
     <div>
       <CSSReset />
-      <NavBar />
-      <Main />
+      <NavBar setToken={setToken} />
+      <Main setToken={setToken} token={token} />
       {/* <Switch>
       </Switch> */}
       {/* <Discover /> */}
