@@ -81,7 +81,7 @@ export default function MessageList({ token, key }) {
               });
 
       message = conversations[0];
-      setOtherPerson(MY_USER_ID === conversations[0].sender ? conversations[0].receiver : conversations[0].receiver);      
+      setOtherPerson(MY_USER_ID === conversations[0].sender ? conversations[0].receiver : conversations[0].sender);      
 
       let counter = 20;
       while (message != null && counter > 0) {
@@ -257,14 +257,6 @@ export default function MessageList({ token, key }) {
       />
 
       <div className="message-list-container">{renderMessages()}</div>
-
-      <input
-            outline='none'
-            type="text"
-            className="compose-input"
-            placeholder="Type a message, @name"
-            onchange={(e) => console.log("ASDASDA")}
-          />
 
       <Compose setMessage={setNextMessage} sendMessage={sendMessage} rightItems={[
         <ToolbarButton key="photo" icon="ion-ios-camera" />,
