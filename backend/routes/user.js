@@ -14,7 +14,7 @@ const { ResultWithContext } = require("express-validator/src/chain");
 const { ObjectId } = require("mongodb");
 
 const db = mongoose.connection;
-const url = "mongodb://127.0.0.1:27017/group9final";
+const url = "mongodb://127.0.0.1:27017/demo9";
 
 mongoose.connect(url, { useUnifiedTopology: true, useNewUrlParser: true })
 
@@ -43,7 +43,7 @@ router.post(
             });
         }
 
-        const { username, email, password, bio, emojigoal, goal, age, aboutme1, aboutme2, aboutme3 } = req.body;
+        const { username, age, email, password, bio, goal, aboutme1, aboutme2, aboutme3, profileurl, emojigoal } = req.body;
         const conversations = [];
         try {
             let user = await User.findOne({
@@ -65,6 +65,7 @@ router.post(
                 aboutme1,
                 aboutme2,
                 aboutme3,
+                profileurl,
                 emojigoal,
                 conversations
             });
